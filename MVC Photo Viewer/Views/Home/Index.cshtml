@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/photoviewer.min.css" rel="stylesheet" />
+
+<h2>Index</h2>
+
+<div id="divImageGallery">
+    <img id="imgMain" src="" onclick="showImage(this);" style="max-width:100%;" />
+    <div id="divImageGalleryFooter">
+        <hr style="margin:0;padding-bottom:15px;" />
+        <button id="btn_leftarrow" onclick="btn_leftarrow_click();" class="arrow_button">&lt;</button>
+        <div id="divPaginator" style="display:inline-block;width:50%;text-align:center;">
+        </div>
+        <button id="btn_rightarrow" onclick="btn_rightarrow_click();" class="arrow_button">&gt;</button>
+    </div>
+</div>
+<div id="divimage" class="modal" style="overflow:hidden;text-align:center;">
+    <img class="modal-content" id="modalimg" style="max-width:75%; max-height:75%;margin-top:5%;">
+    <div id="caption"></div>
+</div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script>
+    var selected_doot = 0;
+    var img_titles = @Html.Raw(Json.Encode(ViewBag.ImageTitleList));
+    var img_list_count = @ViewBag.ImageTitleList.Count;
+
+
+    $(function () {
+        load_doots();
+    });
+
+    function getImageFromServer(ind) {
+        var local = '';
+        $.ajax({
+            async: false,
+            cached: false,
+            url: "/Home/GetImageData",
+            data: {index: ind},
+            type: "GET",
+            success: function (result) {
+                local = result;
+            },
+            error: function () {
+                alert('got error');
+            }
+        });
+        return local;
+    }
+
+    function load_doots() {
+
+        var html_doots = '';
+        var pg = $('#divPaginator');
+
+        pg.html(html_doots);
+        for (var i = 0; i < img_list_count; i++) {
+            var doot = "<a id='doot"+i+"' class='doot' onclick='doot_click(this);'></a>";
+            html_doots += doot;
+        }
+        pg.html(html_doots);
+        change_doot(selected_doot);
+    }
+
+    function doot_click(self){
+        var id = parseInt($(self).attr('id').replace('doot', ''));
+        change_doot(id);
+    }
+
+    function change_doot(target_id) {
+        selected_doot = target_id;
+        $('#divPaginator .doot').each(function (index, item) {
+            if ($(item).attr('id') == 'doot' + target_id) {
+                $(item).addClass('selected_doot');
+                //alert(img_lst[index]);
+            } else {
+                $(item).removeClass('selected_doot');
+            }
+        });
+        $('#imgMain').attr('src', getImageFromServer(selected_doot));
+    }
+
+    function btn_leftarrow_click() {
+        if (selected_doot > 0) {
+            change_doot(selected_doot -1);
+        }
+    }
+
+    function btn_rightarrow_click() {
+        if (selected_doot < img_list_count - 1) {
+            change_doot(selected_doot + 1);
+        }
+    }
+
+    function showImage(img) {
+        var modal = $('#divimage');
+        modal.modal('show');
+        $('#modalimg').attr("src", img.src);
+        $("#caption").html(img.alt);
+        modal.click(function () {
+            modal.modal('hide');
+        });
+    }
+</script>
