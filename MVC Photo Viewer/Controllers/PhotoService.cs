@@ -8,7 +8,7 @@ using System.Drawing;
 namespace MVC_Photo_Viewer.Controllers {
     public static class PhotoService {
 
-        private static readonly string ROOT = "C:\\Users\\AShehadeh\\D&W Fine Pack\\Marketing Communications - Product Photos\\";
+        private static readonly string ROOT = "D:\\Pictures\\";
         //Takes list of string file names. Example: 1074.jpg, 1111.jpg, B95.png
         //Returns list of byte strings for photos, sent to view
         public static string getPhotoData(string name) {

@@ -15,10 +15,10 @@ namespace MVC_Photo_Viewer.Controllers
     public class HomeController : Controller
     {
         List<string> ImageTitleList = new List<string>() {
-                "1074.jpg",
-                "1111.jpg",
-                "B95.png",
-                "_AFW.jpg"
+                "BARK BARK.png",
+                "bananna dolphins.jpg",
+                "cum.jpg",
+                "me irl.png"
             };
         // GET: Home
         public ActionResult Index()
